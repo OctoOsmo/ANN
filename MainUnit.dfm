@@ -33,8 +33,6 @@ object FormMain: TFormMain
     ShowHint = False
     TabOrder = 0
     OnChange = TrackBarNeuronCountChange
-    ExplicitLeft = 8
-    ExplicitTop = 128
   end
   object OpenInputDialog: TOpenDialog
     Left = 96

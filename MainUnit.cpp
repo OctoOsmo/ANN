@@ -25,7 +25,7 @@ FILE *in;
 FILE *out;
 
 // ---------------------------------------------------------------------------
-void normalize(std::vector<double> &v) {
+void Normalize(std::vector<double> &v) {
 	int max = INT_MIN;
 	int min = INT_MAX;
 	for (unsigned int i = 0; i < v.size(); ++i)
@@ -45,7 +45,7 @@ void normalize(std::vector<double> &v) {
 }
 
 // ---------------------------------------------------------------------------
-inline double summ(std::vector<double> &x, std::vector<double> &w) {
+inline double Summ(std::vector<double> &x, std::vector<double> &w) {
 	double sum = 0;
 	for (unsigned int i = 0; i < x.size(); ++i)
 		for (unsigned int j = 0; j < w.size(); ++j)
