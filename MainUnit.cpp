@@ -19,10 +19,14 @@ TFormMain *FormMain;
 __fastcall TFormMain::TFormMain(TComponent* Owner) : TForm(Owner) {
 }
 // ---------------------------------------------------------------------------
-std::vector<std::vector<double> >x(0);
-std::vector<std::vector<double> >w(0);
-FILE *in;
-FILE *out;
+int NC, HNC;//input neurons count and hidden neurons count respectively
+std::vector<std::vector<double> >x(0);//all training sequense
+std::vector<std::vector<double> >w(0);//weights matrix
+std::vector<double> y1;//first logistic layer output
+std::vector<double> y2;//second logistic layer output
+std::vector<double> yh;//hidden layer output;
+FILE *in;//input file
+FILE *out;//output file
 
 // ---------------------------------------------------------------------------
 void Normalize(std::vector<double> &v) {
@@ -43,7 +47,14 @@ void Normalize(std::vector<double> &v) {
 		v[i] = (v[i] - min) / div;
 	}
 }
-
+// ---------------------------------------------------------------------------
+inline double Summ(std::vector<double> &v)
+{
+	double s = 0;
+	for(unsigned int i = 0; i < v.size(); ++i)
+		s += v[i];
+	return(s);
+}
 // ---------------------------------------------------------------------------
 inline double Summ(std::vector<double> &x, std::vector<double> &w) {
 	double sum = 0;
@@ -83,7 +94,9 @@ void ReadInputFile(const wchar_t *file_name) {
 	while (fscanf(in, "%lf", &tmp) != EOF) {
 		tmp_vector.push_back(tmp);
 		if (j == input_size) {
+			Normalize(tmp_vector);
 			x.push_back(tmp_vector);
+			tmp_vector.clear();
 			j = 0;
 		}
 		++j;
@@ -102,7 +115,7 @@ void FillRandom(std::vector<double> &v) {
 }
 
 // ---------------------------------------------------------------------------
-void FillVectorRandom(std::vector<std::vector<double> > &v, int &NC, int &HNC) {
+void FillVectorRandom(std::vector<std::vector<double> > &v) {
 	Randomize();
 	v.resize(NC);
 	for (int i = 0; i < NC; ++i) {
@@ -114,14 +127,34 @@ void FillVectorRandom(std::vector<std::vector<double> > &v, int &NC, int &HNC) {
 
 // ---------------------------------------------------------------------------
 void InitializeWeights(void) {
-	int NC, HNC; // neuron counts in first and second levels respectively
 	if (x.size() > 0) {
-		NC = x[0].size();
-		HNC = FormMain->TrackBarNeuronCount->Position;
-		FillVectorRandom(w, NC, HNC);
+		NC = x[0].size();//first level neuron count
+		HNC = FormMain->TrackBarNeuronCount->Position;//Hidden layer neuron count
+		FillVectorRandom(w);
 	}
 }
 
+// ---------------------------------------------------------------------------
+void Network()
+{
+	y1.clear();
+	y2.clear();
+	yh.clear();
+	//compute first level output
+	double s;
+	for(int i = 0; i < NC; ++i)
+	{
+		s = Summ(x[i]);
+//		s = LogisticNeuron(Summ(x[i]));
+//		y1.push_back(LogisticNeuron(Summ(x[i])));
+
+	}
+}
+// ---------------------------------------------------------------------------
+void Train(void)
+{
+
+}
 // ---------------------------------------------------------------------------
 void __fastcall TFormMain::NOpenClick(TObject *Sender) {
 	if (FormMain->OpenInputDialog->Execute()) {
