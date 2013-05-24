@@ -2,7 +2,7 @@ object FormMain: TFormMain
   Left = 0
   Top = 0
   Caption = #1040#1074#1090#1086#1072#1089#1089#1086#1094#1080#1072#1090#1080#1074#1085#1072#1103' '#1089#1077#1090#1100
-  ClientHeight = 242
+  ClientHeight = 208
   ClientWidth = 527
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -35,11 +35,11 @@ object FormMain: TFormMain
     OnChange = TrackBarNeuronCountChange
   end
   object Button2: TButton
-    Left = 384
-    Top = 192
-    Width = 75
+    Left = 424
+    Top = 168
+    Width = 89
     Height = 25
-    Caption = 'Button2'
+    Caption = #1054#1073#1091#1095#1080#1090#1100'  '#1089#1077#1090#1100
     TabOrder = 1
     OnClick = Button2Click
   end
@@ -47,8 +47,8 @@ object FormMain: TFormMain
     FileName = 'in.txt'
     Filter = 'txt|*.txt'
     InitialDir = '.\'
-    Left = 96
-    Top = 80
+    Left = 24
+    Top = 104
   end
   object MainMenu: TMainMenu
     Left = 24
@@ -80,14 +80,14 @@ object FormMain: TFormMain
     FileName = 'w.txt'
     Filter = 'txt|*.txt'
     InitialDir = '.\'
-    Left = 232
-    Top = 96
+    Left = 80
+    Top = 104
   end
   object SaveMatrixDialog: TSaveDialog
     FileName = 'xout.txt'
     Filter = 'txt|*.txt'
     InitialDir = '.'
-    Left = 336
-    Top = 112
+    Left = 80
+    Top = 152
   end
 end

@@ -21,6 +21,7 @@ __fastcall TFormMain::TFormMain(TComponent* Owner) : TForm(Owner) {
 // ---------------------------------------------------------------------------
 int NC, HNC; // input neurons count and hidden neurons count respectively
 double a = 0.01; // learning speed parameter
+double eps = 1; // learning parameter
 std::vector<std::vector<double> >x; // all training sequense
 std::vector<std::vector<double> >xout; // output of neural network
 std::vector<std::vector<double> >w; // weights matrix
@@ -127,7 +128,7 @@ void SaveWeights(const wchar_t *file_name) {
 void SaveMatrix(const wchar_t *file_name, std::vector<std::vector<double> > &v)
 {
 	out = _wfopen(file_name, L"w+");
-	for (unsigned int i= 0; i < v.size(); ++i) {
+	for (unsigned int i = 0; i < v.size(); ++i) {
 		for (unsigned int j = 0; j < v[i].size(); ++j) {
 			fprintf(out, "%lf ", v[i][j]);
 			double tmp = v[i][j];
@@ -166,40 +167,48 @@ void InitializeWeights(void) {
 }
 
 // ---------------------------------------------------------------------------
-void Network(std::vector<double> &xin) {
+void Network(std::vector<double> &xin, std::vector<double> &xo) {
 	y.clear();
+	xo.clear();
+	xo.resize(NC);
 	// compute hidden layer output
 	for (int i = 0; i < HNC; ++i) {
 		y.push_back(LogisticNeuron(Summ(xin, w[i])));
 	}
-}
-
-// ---------------------------------------------------------------------------
-void TrainVector(std::vector<double> &xin, std::vector<double> &xo) {
-	xo.clear();
-	xo.resize(NC);
 	// compute network output
 	for (int i = 0; i < NC; ++i)
 		for (int j = 0; j < HNC; ++j)
 			xo[i] = xo[i] + y[j] * w[i][j];
+}
+
+// ---------------------------------------------------------------------------
+double TrainVector(std::vector<double> &xin, std::vector<double> &xo) {
+	double e = 0;
+	double dw = 0;
 	double ay;
 	for (int i = 0; i < HNC; ++i) {
 		ay = a * y[i];
 		for (int j = 0; j < NC; ++j) {
-			w[i][j] += ay * (xin[j] - xo[j]);
+			dw = ay * (xin[j] - xo[j]);
+			e += fabs(xin[j] - xo[j]);
+			w[i][j] += dw;
 		}
 	}
+	return (e / NC);
 }
 
 // ---------------------------------------------------------------------------
 void Train(void) {
 	int count = 0;
-	xout.resize(NC);
-	while (count < 10000) {
+	xout.resize(x.size());
+	double tmp_eps = 2;
+	while ((tmp_eps > eps) && (count < 10000)) {
+		tmp_eps = 0;
 		for (unsigned int i = 0; i < x.size(); ++i) {
-			Network(x[i]);
-			TrainVector(x[i], xout[i]);
+			Network(x[i], xout[i]);
+			tmp_eps += TrainVector(x[i], xout[i]);
 		}
+		tmp_eps /= x.size(); // x.size is number of input vectors
 		++count;
 	}
 }
