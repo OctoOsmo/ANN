@@ -34,7 +34,19 @@ object FormMain: TFormMain
     TabOrder = 0
     OnChange = TrackBarNeuronCountChange
   end
+  object Button2: TButton
+    Left = 384
+    Top = 192
+    Width = 75
+    Height = 25
+    Caption = 'Button2'
+    TabOrder = 1
+    OnClick = Button2Click
+  end
   object OpenInputDialog: TOpenDialog
+    FileName = 'in.txt'
+    Filter = 'txt|*.txt'
+    InitialDir = '.\'
     Left = 96
     Top = 80
   end
@@ -52,11 +64,30 @@ object FormMain: TFormMain
       end
       object NSaveWeights: TMenuItem
         Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100' '#1074#1077#1089#1072
+        OnClick = NSaveWeightsClick
+      end
+      object NSaveMatrix: TMenuItem
+        Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100' '#1074#1099#1093#1086#1076' '#1089#1077#1090#1080
+        OnClick = NSaveMatrixClick
       end
       object NExit: TMenuItem
         Caption = #1042#1099#1093#1086#1076
         OnClick = NExitClick
       end
     end
+  end
+  object SaveWeightsDialog: TSaveDialog
+    FileName = 'w.txt'
+    Filter = 'txt|*.txt'
+    InitialDir = '.\'
+    Left = 232
+    Top = 96
+  end
+  object SaveMatrixDialog: TSaveDialog
+    FileName = 'xout.txt'
+    Filter = 'txt|*.txt'
+    InitialDir = '.'
+    Left = 336
+    Top = 112
   end
 end

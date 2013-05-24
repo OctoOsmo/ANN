@@ -23,9 +23,16 @@ __published:	// IDE-managed Components
 	TMenuItem *NExit;
 	TTrackBar *TrackBarNeuronCount;
 	TLabel *LabelNeuronCount;
+	TSaveDialog *SaveWeightsDialog;
+	TButton *Button2;
+	TSaveDialog *SaveMatrixDialog;
+	TMenuItem *NSaveMatrix;
 	void __fastcall NOpenClick(TObject *Sender);
 	void __fastcall TrackBarNeuronCountChange(TObject *Sender);
 	void __fastcall NExitClick(TObject *Sender);
+	void __fastcall NSaveWeightsClick(TObject *Sender);
+	void __fastcall Button2Click(TObject *Sender);
+	void __fastcall NSaveMatrixClick(TObject *Sender);
 private:	// User declarations
 public:		// User declarations
 	__fastcall TFormMain(TComponent* Owner);

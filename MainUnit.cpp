@@ -19,14 +19,14 @@ TFormMain *FormMain;
 __fastcall TFormMain::TFormMain(TComponent* Owner) : TForm(Owner) {
 }
 // ---------------------------------------------------------------------------
-int NC, HNC;//input neurons count and hidden neurons count respectively
-std::vector<std::vector<double> >x(0);//all training sequense
-std::vector<std::vector<double> >w(0);//weights matrix
-std::vector<double> y1;//first logistic layer output
-std::vector<double> y2;//second logistic layer output
-std::vector<double> yh;//hidden layer output;
-FILE *in;//input file
-FILE *out;//output file
+int NC, HNC; // input neurons count and hidden neurons count respectively
+double a = 0.01; // learning speed parameter
+std::vector<std::vector<double> >x; // all training sequense
+std::vector<std::vector<double> >xout; // output of neural network
+std::vector<std::vector<double> >w; // weights matrix
+std::vector<double>y; // hidden layer output;
+FILE *in; // input file
+FILE *out; // output file
 
 // ---------------------------------------------------------------------------
 void Normalize(std::vector<double> &v) {
@@ -47,16 +47,17 @@ void Normalize(std::vector<double> &v) {
 		v[i] = (v[i] - min) / div;
 	}
 }
+
 // ---------------------------------------------------------------------------
-inline double Summ(std::vector<double> &v)
-{
+inline double Summ(std::vector<double> &v) {
 	double s = 0;
-	for(unsigned int i = 0; i < v.size(); ++i)
+	for (unsigned int i = 0; i < v.size(); ++i)
 		s += v[i];
-	return(s);
+	return (s);
 }
+
 // ---------------------------------------------------------------------------
-inline double Summ(std::vector<double> &x, std::vector<double> &w) {
+inline double Summ(std::vector<double>x, std::vector<double>w) {
 	double sum = 0;
 	for (unsigned int i = 0; i < x.size(); ++i)
 		for (unsigned int j = 0; j < w.size(); ++j)
@@ -65,7 +66,7 @@ inline double Summ(std::vector<double> &x, std::vector<double> &w) {
 }
 
 // ---------------------------------------------------------------------------
-inline double LogisticNeuron(double &sum) {
+inline double LogisticNeuron(double sum) {
 	double y;
 	y = 1 / (1 + exp(-sum));
 	return (y);
@@ -105,6 +106,35 @@ void ReadInputFile(const wchar_t *file_name) {
 	FormMain->TrackBarNeuronCount->Max = input_size;
 	FormMain->TrackBarNeuronCount->Min = 1;
 	FormMain->TrackBarNeuronCount->Position = (input_size - 1) / 2;
+	fclose(in);
+}
+
+// ---------------------------------------------------------------------------
+void SaveWeights(const wchar_t *file_name) {
+	out = _wfopen(file_name, L"w+");
+	fprintf(out, "%d %d\n", NC, HNC);
+	for (int i = 0; i < NC; ++i) {
+		for (int j = 0; j < HNC; ++j) {
+			fprintf(out, "%lf ", w[i][j]);
+			double we = w[i][j];
+		}
+		fprintf(out, "\n");
+	}
+	fclose(out);
+}
+
+// ---------------------------------------------------------------------------
+void SaveMatrix(const wchar_t *file_name, std::vector<std::vector<double> > &v)
+{
+	out = _wfopen(file_name, L"w+");
+	for (unsigned int i= 0; i < v.size(); ++i) {
+		for (unsigned int j = 0; j < v[i].size(); ++j) {
+			fprintf(out, "%lf ", v[i][j]);
+			double tmp = v[i][j];
+		}
+		fprintf(out, "\n");
+	}
+	fclose(out);
 }
 
 // ---------------------------------------------------------------------------
@@ -128,33 +158,52 @@ void FillVectorRandom(std::vector<std::vector<double> > &v) {
 // ---------------------------------------------------------------------------
 void InitializeWeights(void) {
 	if (x.size() > 0) {
-		NC = x[0].size();//first level neuron count
-		HNC = FormMain->TrackBarNeuronCount->Position;//Hidden layer neuron count
+		NC = x[0].size(); // first level neuron count
+		HNC = FormMain->TrackBarNeuronCount->Position;
+		// Hidden layer neuron count
 		FillVectorRandom(w);
 	}
 }
 
 // ---------------------------------------------------------------------------
-void Network()
-{
-	y1.clear();
-	y2.clear();
-	yh.clear();
-	//compute first level output
-	double s;
-	for(int i = 0; i < NC; ++i)
-	{
-		s = Summ(x[i]);
-//		s = LogisticNeuron(Summ(x[i]));
-//		y1.push_back(LogisticNeuron(Summ(x[i])));
-
+void Network(std::vector<double> &xin) {
+	y.clear();
+	// compute hidden layer output
+	for (int i = 0; i < HNC; ++i) {
+		y.push_back(LogisticNeuron(Summ(xin, w[i])));
 	}
 }
-// ---------------------------------------------------------------------------
-void Train(void)
-{
 
+// ---------------------------------------------------------------------------
+void TrainVector(std::vector<double> &xin, std::vector<double> &xo) {
+	xo.clear();
+	xo.resize(NC);
+	// compute network output
+	for (int i = 0; i < NC; ++i)
+		for (int j = 0; j < HNC; ++j)
+			xo[i] = xo[i] + y[j] * w[i][j];
+	double ay;
+	for (int i = 0; i < HNC; ++i) {
+		ay = a * y[i];
+		for (int j = 0; j < NC; ++j) {
+			w[i][j] += ay * (xin[j] - xo[j]);
+		}
+	}
 }
+
+// ---------------------------------------------------------------------------
+void Train(void) {
+	int count = 0;
+	xout.resize(NC);
+	while (count < 10000) {
+		for (unsigned int i = 0; i < x.size(); ++i) {
+			Network(x[i]);
+			TrainVector(x[i], xout[i]);
+		}
+		++count;
+	}
+}
+
 // ---------------------------------------------------------------------------
 void __fastcall TFormMain::NOpenClick(TObject *Sender) {
 	if (FormMain->OpenInputDialog->Execute()) {
@@ -169,10 +218,32 @@ void __fastcall TFormMain::TrackBarNeuronCountChange(TObject *Sender) {
 		IntToStr(FormMain->TrackBarNeuronCount->Position);
 	InitializeWeights();
 }
-// ---------------------------------------------------------------------------
-void __fastcall TFormMain::NExitClick(TObject *Sender)
-{
-FormMain->Close();
-}
-//---------------------------------------------------------------------------
 
+// ---------------------------------------------------------------------------
+void __fastcall TFormMain::NExitClick(TObject *Sender) {
+	FormMain->Close();
+}
+
+// ---------------------------------------------------------------------------
+void __fastcall TFormMain::NSaveWeightsClick(TObject *Sender) {
+	if (FormMain->SaveMatrixDialog->Execute()) {
+		SaveWeights(FormMain->SaveWeightsDialog->FileName.w_str());
+	}
+}
+// ---------------------------------------------------------------------------
+
+// ---------------------------------------------------------------------------
+
+// ---------------------------------------------------------------------------
+
+void __fastcall TFormMain::Button2Click(TObject *Sender) {
+	Train();
+}
+
+// ---------------------------------------------------------------------------
+void __fastcall TFormMain::NSaveMatrixClick(TObject *Sender) {
+	if (FormMain->SaveMatrixDialog->Execute()) {
+		SaveMatrix(FormMain->SaveMatrixDialog->FileName.w_str(), xout);
+	}
+}
+// ---------------------------------------------------------------------------
