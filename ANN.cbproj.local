@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>1899.12.30 00:00:00.000.704,C:\Users\al\Documents\GitHub\ANNClass\MainUnit.h=C:\Users\al\Documents\RAD Studio\Projects\Unit1.h</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.704,C:\Users\al\Documents\GitHub\ANNClass\MainUnit.dfm=C:\Users\al\Documents\RAD Studio\Projects\Unit1.dfm</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.163,=C:\Users\al\Documents\GitHub\ANNClass\File1.cpp</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.024,C:\Users\al\Documents\GitHub\ANNClass\File1.cpp=C:\Users\al\Documents\GitHub\ANNClass\ANNFile.cpp</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.751,=C:\Users\al\Documents\GitHub\ANNClass\File1.cpp</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.152,C:\Users\al\Documents\GitHub\ANNClass\ANNClass.cpp=C:\Users\al\Documents\GitHub\ANNClass\File1.cpp</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.562,=C:\Users\al\Documents\RAD Studio\Projects\Unit1.cpp</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.415,C:\Users\al\Documents\GitHub\ANNClass\ProjectANN.h=C:\Users\al\Documents\RAD Studio\Projects\Project1PCH1.h</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.704,C:\Users\al\Documents\GitHub\ANNClass\MainUnit.cpp=C:\Users\al\Documents\RAD Studio\Projects\Unit1.cpp</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.471,=C:\Users\al\Documents\RAD Studio\Projects\Project1PCH1.h</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.378,C:\Users\al\Documents\GitHub\ANNClass\ANN.cbproj=C:\Users\al\Documents\RAD Studio\Projects\Project1.cbproj</Transaction>
+  </Transactions>
+</BorlandProject>

@@ -7,37 +7,17 @@
 #include <Vcl.Controls.hpp>
 #include <Vcl.StdCtrls.hpp>
 #include <Vcl.Forms.hpp>
-#include <Vcl.Dialogs.hpp>
-#include <Vcl.Menus.hpp>
-#include <Vcl.ComCtrls.hpp>
 //---------------------------------------------------------------------------
-class TFormMain : public TForm
+class TForm1 : public TForm
 {
 __published:	// IDE-managed Components
-	TOpenDialog *OpenInputDialog;
-	TMainMenu *MainMenu;
-	TMenuItem *NFile;
-	TMenuItem *NOpen;
-	TMenuItem *NOpenWeights;
-	TMenuItem *NSaveWeights;
-	TMenuItem *NExit;
-	TTrackBar *TrackBarNeuronCount;
-	TLabel *LabelNeuronCount;
-	TSaveDialog *SaveWeightsDialog;
-	TButton *Button2;
-	TSaveDialog *SaveMatrixDialog;
-	TMenuItem *NSaveMatrix;
-	void __fastcall NOpenClick(TObject *Sender);
-	void __fastcall TrackBarNeuronCountChange(TObject *Sender);
-	void __fastcall NExitClick(TObject *Sender);
-	void __fastcall NSaveWeightsClick(TObject *Sender);
-	void __fastcall Button2Click(TObject *Sender);
-	void __fastcall NSaveMatrixClick(TObject *Sender);
+	TButton *Button1;
+	void __fastcall Button1Click(TObject *Sender);
 private:	// User declarations
 public:		// User declarations
-	__fastcall TFormMain(TComponent* Owner);
+	__fastcall TForm1(TComponent* Owner);
 };
 //---------------------------------------------------------------------------
-extern PACKAGE TFormMain *FormMain;
+extern PACKAGE TForm1 *Form1;
 //---------------------------------------------------------------------------
 #endif
