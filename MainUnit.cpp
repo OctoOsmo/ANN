@@ -1,24 +1,8 @@
-// ---------------------------------------------------------------------------
-
-#include <vcl.h>
-#pragma hdrstop
-
+//#include "ANN.h"
 #include "MainUnit.h"
-#include "ANNClass.cpp"
-// ---------------------------------------------------------------------------
-#pragma package(smart_init)
-#pragma resource "*.dfm"
-TForm1 *Form1;
 
-// ---------------------------------------------------------------------------
-
-// ---------------------------------------------------------------------------
-__fastcall TForm1::TForm1(TComponent* Owner) : TForm(Owner) {
+int main (void)
+{
+	printf("hi");
+	getchar();
 }
-
-// ---------------------------------------------------------------------------
-void __fastcall TForm1::Button1Click(TObject *Sender) {
-	ANN test;
-	Caption = test.GetName();
-}
-// ---------------------------------------------------------------------------
