@@ -40,13 +40,26 @@ private:
 	{
 		//randomize();
 		srand(time(NULL));
+		//printf("\n%d\n", time(NULL));
 		for (unsigned int i = 0; i < v.size(); ++i)
 			v[i] = ((double) (rand()%100)) / 100;
 	}
 
+public:
+	std::vector<std::vector<double> >w; // weights matrix
+	std::vector<std::vector<double> >x; // all input vectors
+	std::vector<std::vector<double> >xout; // output of neural network
+
+	ANN(int ic, double ac = 0.01, double epsc = 0.01, int NCc = 2) // constructor
+	{ 
+		a = ac; // learning speed parameter
+		eps = epsc; // learning parameter
+		NC =NCc; // number of neurons in hidden layer
+		inputs_count = ic;
+	}
+
 	inline void FillWeightsRandom(std::vector<std::vector<double> > &v) 
 	{
-		//randomize();
 		v.resize(inputs_count);
 		for (int i = 0; i < inputs_count; ++i) 
 		{
@@ -55,24 +68,12 @@ private:
 		}
 	}
 
-public:
-	std::vector<std::vector<double> >w; // weights matrix
-	std::vector<std::vector<double> >x; // all input vectors
-	std::vector<std::vector<double> >xout; // output of neural network
-
-	ANN(double ac = 0.01, double epsc = 0.1, int NCc = 2) // constructor
-	{ 
-		a = ac; // learning speed parameter
-		eps = epsc; // learning parameter
-		NC =NCc; // number of neurons in hidden layer
-	}
-
 	static void PrintVector(std::vector<double> &v) // debug function
 	{ 
-		printf("/n");
+		printf("\n");
 		for (unsigned int i = 0; i < v.size(); ++i)
 			printf("%lf ", v[i]);
-		printf("/n");
+		printf("\n");
 	}
 
 	void Network(std::vector<double> &in, std::vector<double> &out, std::vector<double> &y) 
@@ -82,6 +83,7 @@ public:
 		y.clear();
 		out.clear();
 		out.resize(inputs_count);
+		//printf("\nnet inputs count = %d\n", inputs_count);
 		for (int i = 0; i < NC; ++i) 
 		{
 			y.push_back(LogisticNeuron(in, w[i]));
@@ -97,7 +99,8 @@ public:
 		std::vector<double>y; // output of hidden layer
 		std::vector<double>out; // network output
 		Network(tr, out, y);
-		for (int i = 0; i < NC; ++i) {
+		for (int i = 0; i < NC; ++i) 
+		{
 			ay = a * y[i];
 			for (unsigned int j = 0; j < tr.size(); ++j) 
 			{
@@ -111,23 +114,26 @@ public:
 
 	void Train(std::vector<std::vector<double> >tr)
 	{
-		double tmp_e = 2;
+		double tmp_e = 2;//, alpha = a;
 		int count = 0;
 		xout.resize(x.size());
-		while ((tmp_e > eps) && (count < 5000)) 
+		while ((tmp_e > eps) && (count < 20000)) 
 		{
 			tmp_e = 0;
 			for (unsigned int i = 0; i < tr.size(); ++i) 			
 				tmp_e += TrainVector(tr[i]);			
 			++count;
+			//a = 1/count;
 			tmp_e /= (double) tr.size();
 		}
+		printf("\ncount =%d", count);
+		//a = alpha;
 	}
 
 	static void Normalize(std::vector<double>&v) 
 	{
 		double min, max;
-		min = max = v[1];
+		min = max = v[0];
 		// search for max and min values in vector
 		for (unsigned int i = 1; i < v.size(); ++i)
 			if (v[i] < min)
@@ -138,11 +144,12 @@ public:
 					max = v[i];
 			}
 			// normalization
-			for (unsigned int i = 0; i < v.size(); ++i) //
-				v[i] = (v[i] - min) - (max - min);
 			double div = max - min;
-			for (unsigned int i = 0; i < v.size(); ++i)
-				v[i] = (v[i] - min) / div;			
+			for (unsigned int i = 0; i < v.size(); ++i) 
+			{
+				v[i] = ((v[i] - min) / div);
+			}	
+			ANN::PrintVector(v);
 	}
 
 	char* GetName()
